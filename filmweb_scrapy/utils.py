@@ -1,5 +1,6 @@
 class SingleInstanceClass:
     """https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html"""
+
     __instance = None
 
     def __new__(cls):
