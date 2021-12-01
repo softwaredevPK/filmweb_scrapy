@@ -1,6 +1,8 @@
 from sqlalchemy import (Column, Date, Float, Integer, String, create_engine)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import MultipleResultsFound
+from sqlalchemy import func
 
 from .utils import SingleInstanceClass
 
@@ -30,6 +32,14 @@ class DBManager:
         dal.echo = False
         dal.connect()
         self.session = dal.session_maker()
+
+    def get_director_movies(self, name: str):
+        try:
+            director = self.session.query(Director).filter(func.lower(Director.fullname).contains(name.lower())).one()
+        except MultipleResultsFound:
+            raise ValueError("Multiple Directors found for given name")
+        movies = [movie.strip().lower() for movie in director.movies.split('|')]
+        return self.session.query(Movie).filter(func.lower(Movie.title).in_(movies)).all()
 
 
 class Director(Base):
