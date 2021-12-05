@@ -67,6 +67,31 @@ def movie_length_vs_rating(min_len=5):
     plt.tight_layout()
     ax.show()
 
+
+def actor_rating_vs_movie_rating():
+    final_actor_ratings = np.array([])
+    final_movie_ratings = np.array([])
+    query = db_manager.session.query(Actor)
+    df_actors = pd.read_sql(query.statement, query.session.bind)
+    query = db_manager.session.query(Movie)
+    df_movies = pd.read_sql(query.statement, query.session.bind)
+    for _, movie in df_movies.iterrows():
+        movie_actors_df = df_actors[df_actors['movies'].str.contains(movie.title)]
+        ratings = movie_actors_df['rating']
+        final_actor_ratings = np.append(final_actor_ratings, ratings)
+        final_movie_ratings = np.append(final_movie_ratings, [movie.rating for i in range(len(movie_actors_df))])
+    fig, ax = plt.subplots()
+    plt.scatter(final_actor_ratings, final_movie_ratings)
+    ax.grid(True)
+    ax.set_title("Actor rating vs Movie rating")
+    ax.set_xlabel("Actor Rating")
+    ax.set_ylabel("Movie Rating")
+    plt.tight_layout()
+    ax.show()
+
+
 most_movies_by_director()
 most_movies_by_director(10)
 movie_length_vs_rating()
+actor_rating_vs_movie_rating()
+
