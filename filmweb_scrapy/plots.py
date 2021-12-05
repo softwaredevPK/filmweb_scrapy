@@ -51,6 +51,7 @@ def movie_length_vs_rating(min_len=5):
               "#990000",
               "#ff0000",
               ]
+    fig, ax = plt.subplots()
     for i, genre in enumerate(df.genre.unique()):
         sub_df = df[df['genre'] == genre]
         sub_df_len = len(sub_df)
@@ -58,10 +59,14 @@ def movie_length_vs_rating(min_len=5):
             plt.scatter(sub_df['length'].to_numpy(),  sub_df['rating'].to_numpy(),
                         color=colors[i] if i < len(colors) - 1 else get_random_color(),
                         label=f'{genre}: {sub_df_len}')
-    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left', borderaxespad=0.)
-    plt.grid(True)
-    plt.title("Movie lenght vs rating ")
-    plt.xlabel("Length")
-    plt.ylabel("Rating")
+    ax.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left', borderaxespad=0.)
+    ax.grid(True)
+    ax.set_title("Movie lenght vs rating ")
+    ax.set_xlabel("Length")
+    ax.set_ylabel("Rating")
     plt.tight_layout()
-    plt.show()
+    ax.show()
+
+most_movies_by_director()
+most_movies_by_director(10)
+movie_length_vs_rating()
