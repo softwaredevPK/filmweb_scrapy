@@ -26,13 +26,15 @@ def most_movies_by_director(limit=None):
     fig.show()
 
 
-def movie_length_vs_rating(min_len=5):
+def movie_length_vs_rating_with_stats(min_len=5):
 
     def get_random_color():
         return "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
 
     query = db_manager.session.query(Movie)
-    df = pd.read_sql(query.statement, query.session.bind)
+    df = pd.read_sql(query.statement, query.session.bind) # todo dlaczego pusty df
+    if df.empty:
+        return
     movies_by_genre = df.groupby(by='genre').describe().rating
     print(movies_by_genre)
 
@@ -65,7 +67,6 @@ def movie_length_vs_rating(min_len=5):
     ax.set_xlabel("Length")
     ax.set_ylabel("Rating")
     plt.tight_layout()
-    ax.show()
 
 
 def actor_rating_vs_movie_rating():
@@ -87,11 +88,10 @@ def actor_rating_vs_movie_rating():
     ax.set_xlabel("Actor Rating")
     ax.set_ylabel("Movie Rating")
     plt.tight_layout()
-    ax.show()
 
 
 most_movies_by_director()
 most_movies_by_director(10)
-movie_length_vs_rating()
+movie_length_vs_rating_with_stats()
 actor_rating_vs_movie_rating()
 

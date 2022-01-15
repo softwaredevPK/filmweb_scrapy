@@ -5,15 +5,14 @@ from .models import Actor, Director, Movie, db_manager
 class FilmwebScrapyPipeline:
     def process_item(self, item, spider):
         if type(item) is DirectorItem:
-            self.proces_director_item(item, spider)
+            self.process_director_item(item, spider)
         elif type(item) is MovieItem:
-            self.proces_movie_item(item, spider)
+            self.process_movie_item(item, spider)
         elif type(item) is ActorItem:
-            self.proces_actor_item(item, spider)
+            self.process_actor_item(item, spider)
         return item
 
-    def proces_director_item(self, item, spider):
-        print(f"PIPELINE STARTED {item['movie']}")
+    def process_director_item(self, item, spider):
         fullname = item.get("fullname")
         director = self.get_director(fullname)
         if not director:
@@ -30,7 +29,7 @@ class FilmwebScrapyPipeline:
             director.movies = director.movies + "|" + item.get("movie")
         db_manager.session.commit()
 
-    def proces_actor_item(self, item, spider):
+    def process_actor_item(self, item, spider):
         fullname = item.get("fullname")
         actor = self.get_actor(fullname)
         if not actor:
@@ -47,7 +46,7 @@ class FilmwebScrapyPipeline:
             actor.movies = actor.movies + "|" + item.get("movie")
         db_manager.session.commit()
 
-    def proces_movie_item(self, item, spider):
+    def process_movie_item(self, item, spider):
         title = item["title"]
         movie = self.get_movie(title)
         if not movie:

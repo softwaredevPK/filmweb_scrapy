@@ -43,10 +43,10 @@ class DBManager:
 
     def get_actor_movies(self, name: str):
         try:
-            director = self.session.query(Actor).filter(func.lower(Actor.fullname).contains(name.lower())).one()
+            actor = self.session.query(Actor).filter(func.lower(Actor.fullname).contains(name.lower())).one()
         except MultipleResultsFound:
             raise ValueError("Multiple Directors found for given name")
-        movies = [movie.strip().lower() for movie in director.movies.split('|')]
+        movies = [movie.strip().lower() for movie in actor.movies.split('|')]
         return self.session.query(Movie).filter(func.lower(Movie.title).in_(movies)).all()
 
     def get_most_popular_movies(self, limit=10):
